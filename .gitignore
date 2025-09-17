@@ -1,0 +1,54 @@
+# IoTControllerApp/.gitignore
+
+# Gradle files
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Android Studio/IntelliJ IDE files
+.idea/
+*.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Generated APKs, Android test results
+*.apk
+*.ap_
+*.hprof
+captures/
+output.json
+
+# Keystore files (never commit release keystores!)
+*.jks
+*.keystore
+
+# Coverage files
+*.ec
+
+# Others
+*.class
+*.swp
+
+# Ignore libraries in external projects/libs
+app/libs/
+
+# NDK
+obj/
+
+# Ignore packed assets (if present)
+*.zip
+*.tar.gz
+*.rar
+
+# Misc
+gen/
+bin/

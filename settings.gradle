@@ -1,0 +1,4 @@
+// IoTControllerApp/settings.gradle
+
+rootProject.name = "IoTControllerApp"
+include ':app'

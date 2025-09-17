@@ -1,0 +1,16 @@
+{
+  "version": 8,
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "asset://maps/offline_india.mbtiles"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#ddeeff" }
+    }
+  ]
+}
