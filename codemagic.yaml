@@ -1,6 +1,6 @@
 workflows:
-  android-build:
-    name: IoTControllerApp Build
+  release-build:
+    name: IoTControllerApp Release Build
     max_build_duration: 60
     environment:
       vars:
@@ -8,11 +8,15 @@ workflows:
         ANDROID_KEY_PASSWORD: Encrypted
         ANDROID_KEY_ALIAS: Encrypted
 
-    scripts:
-      - name: Set up JDK
-        script: sudo apt install openjdk-17-jdk -y
+    triggering:
+      events:
+        - push
+      branches:
+        only:
+          - main
 
-      - name: Set up Android SDK
+    scripts:
+      - name: Accept Android SDK licenses
         script: yes | sdkmanager --licenses
 
       - name: Clean project
@@ -28,21 +32,20 @@ workflows:
             echo "MDTiles already exist, skipping download."
           fi
 
-      - name: Build release APK (main branch only)
+      - name: Build signed release APK
         script: |
-          if [ "$CM_BRANCH" = "main" ]; then
-            echo "Building release APK..."
-            ./gradlew assembleRelease -x lint -x compileReleaseKotlin
-          else
-            echo "Not on main branch; skipping release build."
-          fi
+          echo "Building signed release APK on main branch..."
+          ./gradlew assembleRelease \
+            -Pandroid.keystorePassword=$ANDROID_KEYSTORE_PASSWORD \
+            -Pandroid.keyPassword=$ANDROID_KEY_PASSWORD \
+            -Pandroid.keyAlias=$ANDROID_KEY_ALIAS \
+            -x lint -x compileReleaseKotlin
 
     artifacts:
       - app/build/outputs/**/*.apk
 
-# Top-level caching
-cache:
-  paths:
-    - app/build/offline_mdtiles
-    - ~/.gradle
-    - ~/.pub-cache
+    cache:
+      paths:
+        - app/build/offline_mdtiles
+        - ~/.gradle
+        - ~/.pub-cache
