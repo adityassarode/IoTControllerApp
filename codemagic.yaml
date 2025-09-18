@@ -3,8 +3,8 @@ workflows:
     name: Android APK Build
     max_build_duration: 60
     environment:
-      flutter: none # Not a Flutter project
       vars:
+        # Optional: for signing, if needed
         ANDROID_KEYSTORE_PASSWORD: Encrypted
         ANDROID_KEY_PASSWORD: Encrypted
     scripts:
@@ -12,12 +12,8 @@ workflows:
         script: ./gradlew clean
       - name: Build debug APK
         script: ./gradlew assembleDebug
-      # Optional: Build release APK
+      # Optional release APK
       #- name: Build release APK
       #  script: ./gradlew assembleRelease
     artifacts:
-      - build/app/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
+      - app/build/outputs/**/*.apk
