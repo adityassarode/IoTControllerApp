@@ -21,7 +21,7 @@ workflows:
       - name: Clean project
         script: ./gradlew clean
 
-      - name: Download offline map if missing
+      - name: Download offline MDTiles if missing
         script: |
           MDTILES_DIR="app/build/offline_mdtiles"
           if [ ! -d "$MDTILES_DIR" ] || [ -z "$(ls -A $MDTILES_DIR)" ]; then
@@ -31,19 +31,16 @@ workflows:
             echo "MDTiles already exist, skipping download."
           fi
 
-      - name: Build APK with branch-based naming
+      - name: Build APK
         script: |
-          BUILD_NAME=""
           if [ "$CM_BRANCH" = "main" ]; then
             echo "Building release APK on main branch..."
             ./gradlew assembleRelease -x lint -x compileReleaseKotlin
-            BUILD_NAME="app/build/outputs/flutter-apk/app-release.apk"
-            mv $BUILD_NAME "app/build/outputs/flutter-apk/app-release-main-${CM_BUILD_NUMBER}.apk"
+            mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/app-release-main-${CM_BUILD_NUMBER}.apk
           else
             echo "Building debug APK on branch $CM_BRANCH..."
             ./gradlew assembleDebug -x lint -x compileDebugKotlin
-            BUILD_NAME="app/build/outputs/flutter-apk/app-debug.apk"
-            mv $BUILD_NAME "app/build/outputs/flutter-apk/app-debug-${CM_BRANCH}-${CM_BUILD_NUMBER}.apk"
+            mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/app-debug-${CM_BRANCH}-${CM_BUILD_NUMBER}.apk
           fi
 
     cache:
