@@ -2,35 +2,19 @@ workflows:
   android-build:
     name: IoTControllerApp Build
     max_build_duration: 60
-
     environment:
       vars:
         ANDROID_KEYSTORE_PASSWORD: Encrypted
         ANDROID_KEY_PASSWORD: Encrypted
         ANDROID_KEY_ALIAS: Encrypted
 
-    triggering:
-      events:
-        - push
-        - pull_request
-
     scripts:
-      - name: Checkout repository
-        script: git clone $CM_REPO_URL -b $CM_BRANCH
-
-      - name: Use preinstalled JDK and Android SDK
-        script: |
-          echo "Using Codemagic's preinstalled JDK and Android SDK"
-          java -version
-          sdkmanager --version
-          yes | sdkmanager --licenses
-
       - name: Clean project
         script: ./gradlew clean
 
       - name: Download offline map if missing
         script: |
-          MDTILES_DIR="$CM_BUILD_DIR/app/src/main/assets/maps"
+          MDTILES_DIR="app/src/main/assets/maps"
           if [ ! -d "$MDTILES_DIR" ] || [ -z "$(ls -A $MDTILES_DIR)" ]; then
             echo "MDTiles not found, downloading..."
             ./gradlew downloadMdTiles
@@ -41,10 +25,10 @@ workflows:
       - name: Build APK
         script: |
           if [ "$CM_BRANCH" = "main" ]; then
-            echo "Building release APK on main branch..."
+            echo "Building release APK..."
             ./gradlew assembleRelease -x lint
           else
-            echo "Building debug APK on branch $CM_BRANCH..."
+            echo "Building debug APK..."
             ./gradlew assembleDebug -x lint
           fi
 
