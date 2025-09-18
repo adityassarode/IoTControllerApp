@@ -11,13 +11,18 @@ workflows:
     scripts:
       - name: Clean project
         script: ./gradlew clean
+
+      - name: Download mbtiles map
+        script: |
+          mkdir -p app/src/main/assets/maps
+          curl -L "https://we.tl/t-CAaLcBJ2Ot" -o app/src/main/assets/maps/offline_india.mbtiles
+          ls -lh app/src/main/assets/maps/
+
       - name: Build debug APK
         script: ./gradlew assembleDebug
+
       - name: Build release APK
         script: ./gradlew assembleRelease
+
     artifacts:
       - app/build/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
