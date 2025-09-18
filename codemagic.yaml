@@ -1,6 +1,6 @@
 workflows:
-  release-build:
-    name: IoTControllerApp Release Build
+  android-build:
+    name: IoTControllerApp Build
     max_build_duration: 60
     environment:
       vars:
@@ -11,20 +11,25 @@ workflows:
     triggering:
       events:
         - push
-      branches:
-        only:
-          - main
+        - pull_request
 
     scripts:
-      - name: Accept Android SDK licenses
-        script: yes | sdkmanager --licenses
+      - name: Checkout repository
+        script: git clone $CM_REPO_BRANCH
+
+      - name: Set up JDK and Android SDK
+        script: |
+          echo "Using Codemagic's preinstalled JDK and Android SDK"
+          java -version
+          sdkmanager --version
+          yes | sdkmanager --licenses
 
       - name: Clean project
         script: ./gradlew clean
 
-      - name: Download offline MDTiles if missing
+      - name: Download offline map if missing
         script: |
-          MDTILES_DIR="app/build/offline_mdtiles"
+          MDTILES_DIR="$CM_BUILD_DIR/app/build/offline_mdtiles"
           if [ ! -d "$MDTILES_DIR" ] || [ -z "$(ls -A $MDTILES_DIR)" ]; then
             echo "MDTiles not found, downloading..."
             ./gradlew downloadMdTiles
@@ -32,20 +37,20 @@ workflows:
             echo "MDTiles already exist, skipping download."
           fi
 
-      - name: Build signed release APK
+      - name: Build APK
         script: |
-          echo "Building signed release APK on main branch..."
-          ./gradlew assembleRelease \
-            -Pandroid.keystorePassword=$ANDROID_KEYSTORE_PASSWORD \
-            -Pandroid.keyPassword=$ANDROID_KEY_PASSWORD \
-            -Pandroid.keyAlias=$ANDROID_KEY_ALIAS \
-            -x lint -x compileReleaseKotlin
+          if [ "$CM_BRANCH" = "main" ]; then
+            echo "Building release APK on main branch..."
+            ./gradlew assembleRelease -x lint -x compileReleaseKotlin
+          else
+            echo "Building debug APK on branch $CM_BRANCH..."
+            ./gradlew assembleDebug -x lint -x compileDebugKotlin
+          fi
+
+    cache:
+      directories:
+        - ~/.gradle
+        - ~/.pub-cache
 
     artifacts:
       - app/build/outputs/**/*.apk
-
-    cache:
-      paths:
-        - app/build/offline_mdtiles
-        - ~/.gradle
-        - ~/.pub-cache
