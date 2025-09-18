@@ -1,10 +1,3 @@
-cache:
-  key: android-build-cache
-  paths:
-    - app/build/offline_mdtiles
-    - ~/.gradle
-    - ~/.pub-cache
-
 workflows:
   android-build:
     name: IoTControllerApp Build
@@ -16,9 +9,6 @@ workflows:
         ANDROID_KEY_ALIAS: Encrypted
 
     scripts:
-      - name: Checkout repository
-        script: git clone $CM_REPO_BRANCH
-
       - name: Set up JDK
         script: sudo apt install openjdk-17-jdk -y
 
@@ -46,7 +36,13 @@ workflows:
           else
             echo "Building debug APK on branch $CM_BRANCH..."
             ./gradlew assembleDebug -x lint -x compileDebugKotlin
-          fi
+
+    cache:
+      key: android-build-cache
+      directories:
+        - app/build/offline_mdtiles
+        - ~/.gradle
+        - ~/.pub-cache
 
     artifacts:
       - app/build/outputs/**/*.apk
