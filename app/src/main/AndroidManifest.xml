@@ -1,6 +1,5 @@
 <!-- IoTControllerApp/app/src/main/AndroidManifest.xml -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourdomain.iotcontroller">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- App permissions, all strictly required for the full feature set -->
     <uses-permission android:name="android.permission.INTERNET" />
