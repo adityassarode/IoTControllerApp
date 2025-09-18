@@ -15,7 +15,7 @@ workflows:
 
     scripts:
       - name: Checkout repository
-        script: git clone $CM_REPO_BRANCH
+        script: git clone $CM_REPO_URL -b $CM_BRANCH
 
       - name: Set up JDK and Android SDK
         script: |
@@ -27,9 +27,9 @@ workflows:
       - name: Clean project
         script: ./gradlew clean
 
-      - name: Download offline map if missing
+      - name: Download offline MDTiles if missing
         script: |
-          MDTILES_DIR="$CM_BUILD_DIR/app/build/offline_mdtiles"
+          MDTILES_DIR="app/build/offline_mdtiles"
           if [ ! -d "$MDTILES_DIR" ] || [ -z "$(ls -A $MDTILES_DIR)" ]; then
             echo "MDTiles not found, downloading..."
             ./gradlew downloadMdTiles
@@ -41,16 +41,17 @@ workflows:
         script: |
           if [ "$CM_BRANCH" = "main" ]; then
             echo "Building release APK on main branch..."
-            ./gradlew assembleRelease -x lint -x compileReleaseKotlin
+            ./gradlew assembleRelease -x lint
           else
             echo "Building debug APK on branch $CM_BRANCH..."
-            ./gradlew assembleDebug -x lint -x compileDebugKotlin
+            ./gradlew assembleDebug -x lint
           fi
 
     cache:
-      directories:
+      paths:
         - ~/.gradle
         - ~/.pub-cache
+        - app/build/offline_mdtiles
 
     artifacts:
       - app/build/outputs/**/*.apk
