@@ -14,7 +14,6 @@ object ESP32WifiClient {
     private const val DEVICE_PORT = 5050
     private const val TIMEOUT_MS = 3000
 
-    // Sends a command and expects a simple "OK" or data reply
     private suspend fun sendCommand(
         command: String,
         expectResponse: Boolean = false
@@ -62,7 +61,6 @@ object ESP32WifiClient {
 
     suspend fun requestGPS(): String {
         val resp = sendCommand("GPS_REQUEST\n", true)
-        // Example expected format: "GPS:19.0760,72.8777"
         return if (resp.startsWith("GPS:")) resp.substringAfter("GPS:") else "No GPS data"
     }
 
