@@ -1,3 +1,10 @@
+cache:
+  key: android-build-cache
+  paths:
+    - app/build/offline_mdtiles
+    - ~/.gradle
+    - ~/.pub-cache
+
 workflows:
   android-build:
     name: IoTControllerApp Build
@@ -36,22 +43,10 @@ workflows:
           if [ "$CM_BRANCH" = "main" ]; then
             echo "Building release APK on main branch..."
             ./gradlew assembleRelease -x lint -x compileReleaseKotlin
-            # Automatically find the APK
-            RELEASE_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-            mv "$RELEASE_APK" app/build/outputs/apk/release/app-release-main-${CM_BUILD_NUMBER}.apk
           else
             echo "Building debug APK on branch $CM_BRANCH..."
             ./gradlew assembleDebug -x lint -x compileDebugKotlin
-            # Automatically find the APK
-            DEBUG_APK=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
-            mv "$DEBUG_APK" app/build/outputs/apk/debug/app-debug-${CM_BRANCH}-${CM_BUILD_NUMBER}.apk
           fi
-
-    cache:
-      directories:
-        - app/build/offline_mdtiles
-        - ~/.gradle
-        - ~/.pub-cache
 
     artifacts:
       - app/build/outputs/**/*.apk
