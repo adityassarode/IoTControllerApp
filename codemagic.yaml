@@ -11,22 +11,41 @@ workflows:
     scripts:
       - name: Checkout repository
         script: git clone $CM_REPO_BRANCH
+
       - name: Set up JDK
         script: sudo apt install openjdk-17-jdk -y
+
       - name: Set up Android SDK
         script: yes | sdkmanager --licenses
+
       - name: Clean project
         script: ./gradlew clean
-      - name: Download offline map via Gradle
-        script: ./gradlew downloadMdTiles
-      - name: Build debug APK
-        script: ./gradlew assembleDebug -x lint -x compileDebugKotlin
-      - name: Build release APK
-        script: ./gradlew assembleRelease -x lint -x compileReleaseKotlin
+
+      - name: Download offline map if missing
+        script: |
+          MDTILES_DIR="$CM_BUILD_DIR/app/build/offline_mdtiles"
+          if [ ! -d "$MDTILES_DIR" ] || [ -z "$(ls -A $MDTILES_DIR)" ]; then
+            echo "MDTiles not found, downloading..."
+            ./gradlew downloadMdTiles
+          else
+            echo "MDTiles already exist, skipping download."
+          fi
+
+      - name: Build APK
+        script: |
+          if [ "$CM_BRANCH" = "main" ]; then
+            echo "Building release APK on main branch..."
+            ./gradlew assembleRelease -x lint -x compileReleaseKotlin
+          else
+            echo "Building debug APK on branch $CM_BRANCH..."
+            ./gradlew assembleDebug -x lint -x compileDebugKotlin
+          fi
 
     cache:
       paths:
-        - $CM_BUILD_DIR/app/build/offline_mdtiles   # caches the downloaded MDTiles file
+        - $CM_BUILD_DIR/app/build/offline_mdtiles
+        - ~/.gradle
+        - ~/.pub-cache
 
     artifacts:
       - app/build/outputs/**/*.apk
