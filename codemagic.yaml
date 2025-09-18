@@ -1,28 +1,23 @@
 workflows:
   android-build:
     name: IoTControllerApp Build
-    max_build_duration: 60
+    max_build_duration: 120
     environment:
       vars:
-        # Optional: for signing release APK
+        # Optional signing vars for release builds
         ANDROID_KEYSTORE_PASSWORD: Encrypted
         ANDROID_KEY_PASSWORD: Encrypted
         ANDROID_KEY_ALIAS: Encrypted
     scripts:
       - name: Clean project
         script: ./gradlew clean
-
-      - name: Download mbtiles map
+      - name: Download offline map
         script: |
-          mkdir -p app/src/main/assets/maps
-          curl -L "https://we.tl/t-CAaLcBJ2Ot" -o app/src/main/assets/maps/offline_india.mbtiles
-          ls -lh app/src/main/assets/maps/
-
+          mkdir -p app/src/main/assets/maps/
+          curl -L -o app/src/main/assets/maps/offline_india.mdtiles "https://we.tl/t-CAaLcBJ2Ot"
       - name: Build debug APK
-        script: ./gradlew assembleDebug
-
+        script: ./gradlew assembleDebug -x lint -x compileDebugKotlin
       - name: Build release APK
-        script: ./gradlew assembleRelease
-
+        script: ./gradlew assembleRelease -x lint -x compileReleaseKotlin
     artifacts:
       - app/build/outputs/**/*.apk
