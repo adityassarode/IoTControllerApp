@@ -1,23 +1,32 @@
 workflows:
   android-build:
     name: IoTControllerApp Build
-    max_build_duration: 120
+    max_build_duration: 60
     environment:
       vars:
-        # Optional signing vars for release builds
         ANDROID_KEYSTORE_PASSWORD: Encrypted
         ANDROID_KEY_PASSWORD: Encrypted
         ANDROID_KEY_ALIAS: Encrypted
+
     scripts:
+      - name: Checkout repository
+        script: git clone $CM_REPO_BRANCH
+      - name: Set up JDK
+        script: sudo apt install openjdk-17-jdk -y
+      - name: Set up Android SDK
+        script: yes | sdkmanager --licenses
       - name: Clean project
         script: ./gradlew clean
-      - name: Download offline map
-        script: |
-          mkdir -p app/src/main/assets/maps/
-          curl -L -o app/src/main/assets/maps/offline_india.mdtiles "https://we.tl/t-CAaLcBJ2Ot"
+      - name: Download offline map via Gradle
+        script: ./gradlew downloadMdTiles
       - name: Build debug APK
         script: ./gradlew assembleDebug -x lint -x compileDebugKotlin
       - name: Build release APK
         script: ./gradlew assembleRelease -x lint -x compileReleaseKotlin
+
+    cache:
+      paths:
+        - $CM_BUILD_DIR/app/build/offline_mdtiles   # caches the downloaded MDTiles file
+
     artifacts:
       - app/build/outputs/**/*.apk
