@@ -28,21 +28,21 @@ workflows:
             echo "MDTiles already exist, skipping download."
           fi
 
-      - name: Build APK
+      - name: Build release APK (main branch only)
         script: |
           if [ "$CM_BRANCH" = "main" ]; then
-            echo "Building release APK on main branch..."
+            echo "Building release APK..."
             ./gradlew assembleRelease -x lint -x compileReleaseKotlin
           else
-            echo "Building debug APK on branch $CM_BRANCH..."
-            ./gradlew assembleDebug -x lint -x compileDebugKotlin
-
-    cache:
-      key: android-build-cache
-      directories:
-        - app/build/offline_mdtiles
-        - ~/.gradle
-        - ~/.pub-cache
+            echo "Not on main branch; skipping release build."
+          fi
 
     artifacts:
       - app/build/outputs/**/*.apk
+
+# Top-level caching
+cache:
+  paths:
+    - app/build/offline_mdtiles
+    - ~/.gradle
+    - ~/.pub-cache
