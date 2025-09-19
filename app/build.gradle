@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:3.8.0'
     implementation 'org.maplibre.gl:android-sdk:11.8.0'
     implementation 'org.ramani-maps:ramani-maplibre:0.7.0'
+    implementation 'org.maplibre.gl:android-sdk:10.2.0'
     implementation 'com.squareup.moshi:moshi:1.15.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -45,8 +45,7 @@ fun IoTControllerTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography,   // reference your Type.kt
-        shapes = Shapes,           // use default or define your own shapes
+        typography = Typography,   // reference your Type.kt  // use default or define your own shapes
         content = content
     )
 }

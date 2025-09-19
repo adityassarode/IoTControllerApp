@@ -11,13 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yourdomain.iotcontroller.ui.screens.*
-import com.yourdomain.iotcontroller.ui.theme.IoTControllerAppTheme
+import com.yourdomain.iotcontroller.ui.theme.IoTControllerTheme   // ✅ correct import
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            IoTControllerAppTheme {
+            IoTControllerTheme {   // ✅ fixed name
                 Surface(modifier = Modifier.fillMaxSize()) {
                     IoTControllerNavHost()
                 }
