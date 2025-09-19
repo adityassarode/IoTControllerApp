@@ -35,7 +35,7 @@ android {
         kotlinCompilerExtensionVersion '1.5.3'
     }
 
-    // -------- Java 17 compatibility fix ----------
+    // Java 17 compatibility
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -68,18 +68,19 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
     implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
     implementation 'com.squareup.okio:okio:3.8.0'
-    implementation 'org.maplibre.gl:android-sdk:11.8.0'
+
+    // Only keep Ramani Compose Map (remove MapLibre classic SDK)
     implementation 'org.ramani-maps:ramani-maplibre:0.7.0'
-    implementation 'org.maplibre.gl:android-sdk:10.2.0'
+
     implementation 'com.squareup.moshi:moshi:1.15.0'
     implementation "androidx.compose.material:material-icons-extended:1.6.5"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.5"
 }
 
-// ----------------------
 // Gradle task to download offline map with caching
 import java.net.URL
 
