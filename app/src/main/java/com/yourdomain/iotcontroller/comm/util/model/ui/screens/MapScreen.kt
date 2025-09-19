@@ -19,6 +19,7 @@ fun MapScreen(navController: NavController) {
     var gpsLoc by remember { mutableStateOf<GpsLocation?>(null) }
     var fetching by remember { mutableStateOf(false) }
 
+    // Fetch GPS location from ESP32
     fun fetchLocation() {
         fetching = true
         coroutineScope.launch {
@@ -44,7 +45,7 @@ fun MapScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(320.dp),
-                style = "asset://style.json",
+                style = "asset://style.json", // style.json in assets folder
                 cameraPosition = CameraPosition(
                     center = LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude),
                     zoom = 15.0
@@ -52,7 +53,10 @@ fun MapScreen(navController: NavController) {
                 markers = listOf(LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude))
             )
         } else {
-            Text("No location yet. Press refresh to retry.", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "No location yet. Press refresh to retry.",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -63,6 +67,7 @@ fun MapScreen(navController: NavController) {
         ) {
             Text(if (!fetching) "Refresh Location" else "Refreshing…")
         }
+
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = { navController.popBackStack() },
