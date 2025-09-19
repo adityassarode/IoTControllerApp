@@ -1,4 +1,22 @@
 // IoTControllerApp/settings.gradle
 
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://jitpack.io" } // Add this
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" } // Add this
+    }
+}
+
 rootProject.name = "IoTControllerApp"
-include ':app'
+include(":app")
