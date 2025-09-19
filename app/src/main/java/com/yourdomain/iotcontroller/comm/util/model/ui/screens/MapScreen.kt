@@ -1,8 +1,5 @@
 package com.yourdomain.iotcontroller.ui.screens
 
-import org.maplibre.android.maps.MapView
-import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.geometry.LatLng
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -47,7 +44,7 @@ fun MapScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(320.dp),
-                style = "asset://style.json", // Place your style.json in assets/
+                style = "asset://style.json",
                 cameraPosition = CameraPosition(
                     center = LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude),
                     zoom = 15.0
