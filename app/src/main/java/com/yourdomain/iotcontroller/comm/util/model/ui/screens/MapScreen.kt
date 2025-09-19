@@ -9,9 +9,9 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
-import org.ramani.maps.compose.MapLibreMap
-import org.ramani.maps.compose.model.CameraPosition
-import org.ramani.maps.compose.model.LatLng
+import io.github.ramani.maps.compose.MapLibreMap
+import io.github.ramani.maps.compose.model.CameraPosition
+import io.github.ramani.maps.compose.model.LatLng
 
 @Composable
 fun MapScreen(navController: NavController) {
