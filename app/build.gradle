@@ -52,6 +52,12 @@ android {
     }
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven { url "https://jitpack.io" } // Required for MapLibre Compose wrapper
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
     implementation 'androidx.core:core-ktx:1.12.0'
@@ -69,7 +75,7 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
     implementation 'com.squareup.okio:okio:3.8.0'
 
-    // ✅ Correct MapLibre Compose wrapper (instead of ramani-maplibre)
+    // ✅ MapLibre Compose wrapper
     implementation 'com.github.ramani-maps:maplibre-compose:0.7.0'
 
     implementation 'com.squareup.moshi:moshi:1.15.0'

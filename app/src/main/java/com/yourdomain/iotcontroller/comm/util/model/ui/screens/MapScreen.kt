@@ -12,6 +12,7 @@ import com.yourdomain.iotcontroller.model.GpsLocation
 import org.ramani.maps.compose.MapLibreMap
 import org.ramani.maps.compose.model.CameraPosition
 import org.ramani.maps.compose.model.LatLng
+import org.ramani.maps.compose.markers.Marker
 
 @Composable
 fun MapScreen(navController: NavController) {
@@ -29,7 +30,9 @@ fun MapScreen(navController: NavController) {
         }
     }
 
-    LaunchedEffect(Unit) { fetchLocation() }
+    LaunchedEffect(Unit) {
+        fetchLocation()
+    }
 
     Column(
         modifier = Modifier
@@ -50,7 +53,12 @@ fun MapScreen(navController: NavController) {
                     center = LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude),
                     zoom = 15.0
                 ),
-                markers = listOf(LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude))
+                markers = listOf(
+                    Marker(
+                        position = LatLng(gpsLoc!!.latitude, gpsLoc!!.longitude),
+                        title = "You are here"
+                    )
+                )
             )
         } else {
             Text(
