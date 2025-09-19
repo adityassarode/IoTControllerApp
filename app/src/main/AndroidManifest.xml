@@ -24,7 +24,6 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="IoT Controller"
-        android:theme="@style/Theme.IoTControllerApp"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
