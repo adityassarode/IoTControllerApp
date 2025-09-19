@@ -71,7 +71,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:3.8.0'
 
     // ✅ MapLibre Compose wrapper
-    implementation 'com.github.ramani-maps:maplibre-compose:0.7.0'
+    implementation 'org.maplibre.gl:maplibre-android-compose:10.4.0'
 
     implementation 'com.squareup.moshi:moshi:1.15.0'
     implementation "androidx.compose.material:material-icons-extended:1.6.5"
