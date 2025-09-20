@@ -1,21 +1,25 @@
 package com.yourdomain.iotcontroller.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
-import org.maplibre.gl.compose.MapLibreMap
-import org.maplibre.gl.compose.camera.rememberCameraPositionState
-import org.maplibre.gl.compose.model.LatLng
-import org.maplibre.gl.compose.annotation.Marker
+import com.maplibre.maplibregl.MapView
+import com.maplibre.maplibregl.camera.CameraPosition
+import com.maplibre.maplibregl.geometry.LatLng
+import com.maplibre.maplibregl.maps.Style
+import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreen(navController: NavController) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var gpsLoc by remember { mutableStateOf<GpsLocation?>(null) }
     var fetching by remember { mutableStateOf(false) }
@@ -30,7 +34,9 @@ fun MapScreen(navController: NavController) {
         }
     }
 
-    LaunchedEffect(Unit) { fetchLocation() }
+    LaunchedEffect(Unit) {
+        fetchLocation()
+    }
 
     Column(
         modifier = Modifier
@@ -41,20 +47,24 @@ fun MapScreen(navController: NavController) {
         Text("Offline Map & GPS", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(28.dp))
 
-        val cameraPositionState = rememberCameraPositionState {
-            position = LatLng(gpsLoc?.latitude ?: 0.0, gpsLoc?.longitude ?: 0.0)
-        }
-
-        MapLibreMap(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(320.dp),
-            cameraPositionState = cameraPositionState,
-            styleUri = "asset://style.json"
+        // Map view inside Compose
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(320.dp)
         ) {
-            gpsLoc?.let { loc ->
-                Marker(position = LatLng(loc.latitude, loc.longitude))
-            }
+            AndroidView(factory = { ctx: Context ->
+                MapView(ctx).apply {
+                    getMapAsync { map ->
+                        map.setStyle(Style.MAPBOX_STREETS)
+                        gpsLoc?.let {
+                            map.cameraPosition = CameraPosition.fromLatLngZoom(
+                                LatLng(it.latitude, it.longitude),
+                                15.0
+                            )
+                        }
+                    }
+                }
+            })
         }
 
         Spacer(modifier = Modifier.height(16.dp))
