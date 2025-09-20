@@ -1,3 +1,5 @@
+// IoTControllerApp/app/build.gradle
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -35,7 +37,6 @@ android {
         kotlinCompilerExtensionVersion '1.5.3'
     }
 
-    // Java 17 compatibility
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -52,30 +53,35 @@ android {
     }
 }
 
-
 dependencies {
+    // Kotlin & Compose
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.activity:activity-compose:1.8.2'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.navigation:navigation-compose:2.7.6'
     implementation 'androidx.compose.ui:ui:1.6.5'
     implementation 'androidx.compose.material3:material3:1.2.1'
     implementation 'androidx.compose.ui:ui-tooling-preview:1.6.5'
     debugImplementation 'androidx.compose.ui:ui-tooling:1.6.5'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.6.5'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
-    implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
-    implementation 'com.squareup.okio:okio:3.8.0'
 
-    // ✅ MapLibre Compose wrapper
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-compose:2.7.6'
+
+    // MapLibre Compose
     implementation 'org.maplibre.gl:maplibre-android-compose:10.4.0'
 
+    // Other utilities
+    implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
+    implementation 'com.squareup.okio:okio:3.8.0'
     implementation 'com.squareup.moshi:moshi:1.15.0'
     implementation "androidx.compose.material:material-icons-extended:1.6.5"
 
+    // Tests
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

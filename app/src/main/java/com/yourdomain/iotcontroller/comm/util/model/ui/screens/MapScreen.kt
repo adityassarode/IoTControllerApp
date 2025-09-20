@@ -9,11 +9,10 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
-import org.maplibre.compose.MapLibreMap
-import org.maplibre.compose.camera.CameraPositionState
-import org.maplibre.compose.camera.CameraUpdateFactory
-import org.maplibre.compose.style.layers.Marker
-import org.maplibre.compose.model.LatLng
+import org.maplibre.gl.compose.MapLibreMap
+import org.maplibre.gl.compose.camera.rememberCameraPositionState
+import org.maplibre.gl.compose.model.LatLng
+import org.maplibre.gl.compose.annotation.Marker
 
 @Composable
 fun MapScreen(navController: NavController) {
@@ -31,9 +30,7 @@ fun MapScreen(navController: NavController) {
         }
     }
 
-    LaunchedEffect(Unit) {
-        fetchLocation()
-    }
+    LaunchedEffect(Unit) { fetchLocation() }
 
     Column(
         modifier = Modifier
@@ -44,22 +41,22 @@ fun MapScreen(navController: NavController) {
         Text("Offline Map & GPS", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(28.dp))
 
-        val cameraPositionState = remember { CameraPositionState() }
+        val cameraPositionState = rememberCameraPositionState {
+            position = LatLng(gpsLoc?.latitude ?: 0.0, gpsLoc?.longitude ?: 0.0)
+        }
 
         MapLibreMap(
-                modifier = Modifier
-                        .fillMaxWidth()
-                                .height(320.dp),
-                                    cameraPositionState = cameraPositionState,
-                                        styleUri = "asset://style.json",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(320.dp),
+            cameraPositionState = cameraPositionState,
+            styleUri = "asset://style.json"
         ) {
-                gpsLoc?.let { loc ->
-                        Marker(position = LatLng(loc.latitude, loc.longitude))
-                            }
+            gpsLoc?.let { loc ->
+                Marker(position = LatLng(loc.latitude, loc.longitude))
+            }
         }
-        }
-        
-        
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { fetchLocation() },
