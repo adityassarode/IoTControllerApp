@@ -79,7 +79,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:1.6.5"
 
     // MapLibre SDK (classic MapView, not Compose)
-    implementation "org.maplibre.gl:android-sdk:11.5.2"
+    
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
