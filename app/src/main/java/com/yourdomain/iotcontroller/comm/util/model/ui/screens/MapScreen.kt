@@ -11,10 +11,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
-import com.maplibre.maplibregl.MapView
-import com.maplibre.maplibregl.camera.CameraPosition
-import com.maplibre.maplibregl.geometry.LatLng
-import com.maplibre.maplibregl.maps.Style
+import org.maplibre.maps.MapView
+import org.maplibre.maps.MapLibre
+import org.maplibre.maps.Style
+import org.maplibre.maps.camera.CameraPosition
+import org.maplibre.maps.geometry.LatLng
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,33 +35,25 @@ fun MapScreen(navController: NavController) {
         }
     }
 
-    LaunchedEffect(Unit) {
-        fetchLocation()
-    }
+    LaunchedEffect(Unit) { fetchLocation() }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Text("Offline Map & GPS", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Map view inside Compose
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(320.dp)
-        ) {
+        Box(modifier = Modifier.fillMaxWidth().height(320.dp)) {
             AndroidView(factory = { ctx: Context ->
                 MapView(ctx).apply {
                     getMapAsync { map ->
                         map.setStyle(Style.MAPBOX_STREETS)
                         gpsLoc?.let {
-                            map.cameraPosition = CameraPosition.fromLatLngZoom(
-                                LatLng(it.latitude, it.longitude),
-                                15.0
-                            )
+                            map.cameraPosition = CameraPosition.Builder()
+                                .target(LatLng(it.latitude, it.longitude))
+                                .zoom(15.0)
+                                .build()
                         }
                     }
                 }
