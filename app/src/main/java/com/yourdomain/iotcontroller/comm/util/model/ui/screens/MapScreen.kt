@@ -12,10 +12,14 @@ import androidx.navigation.NavController
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
 import org.maplibre.maps.MapView
-import org.maplibre.maps.MapLibre
+import org.maplibre.maps.MapLibreMap
+import org.maplibre.maps.CameraPosition
 import org.maplibre.maps.Style
-import org.maplibre.maps.camera.CameraPosition
-import org.maplibre.maps.geometry.LatLng
+import org.maplibre.maps.plugin.annotation.generated.PointAnnotationManager
+import org.maplibre.maps.plugin.annotation.generated.PointAnnotationOptions
+import org.maplibre.maps.plugin.annotation.generated.createPointAnnotationManager
+import org.maplibre.maps.plugin.Plugin
+import org.maplibre.geojson.Point
 import kotlinx.coroutines.launch
 
 @Composable
