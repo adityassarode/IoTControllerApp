@@ -11,16 +11,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.yourdomain.iotcontroller.comm.ESP32WifiClient
 import com.yourdomain.iotcontroller.model.GpsLocation
+import kotlinx.coroutines.launch
+import org.maplibre.geojson.Point
 import org.maplibre.maps.MapView
-import org.maplibre.maps.MapLibreMap
-import org.maplibre.maps.CameraPosition
 import org.maplibre.maps.Style
-import org.maplibre.maps.plugin.annotation.generated.PointAnnotationManager
+import org.maplibre.maps.CameraPosition
 import org.maplibre.maps.plugin.annotation.generated.PointAnnotationOptions
 import org.maplibre.maps.plugin.annotation.generated.createPointAnnotationManager
-import org.maplibre.maps.plugin.Plugin
-import org.maplibre.geojson.Point
-import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreen(navController: NavController) {
@@ -42,7 +39,9 @@ fun MapScreen(navController: NavController) {
     LaunchedEffect(Unit) { fetchLocation() }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Text("Offline Map & GPS", style = MaterialTheme.typography.headlineMedium)
@@ -53,11 +52,19 @@ fun MapScreen(navController: NavController) {
                 MapView(ctx).apply {
                     getMapAsync { map ->
                         map.setStyle(Style.MAPBOX_STREETS)
-                        gpsLoc?.let {
-                            map.cameraPosition = CameraPosition.Builder()
-                                .target(LatLng(it.latitude, it.longitude))
+                        gpsLoc?.let { loc ->
+                            // Move camera to GPS location
+                            val cameraPosition = CameraPosition.Builder()
+                                .target(Point.fromLngLat(loc.longitude, loc.latitude))
                                 .zoom(15.0)
                                 .build()
+                            map.cameraPosition = cameraPosition
+
+                            // Add a marker
+                            val annotationManager = map.createPointAnnotationManager()
+                            val markerOptions = PointAnnotationOptions()
+                                .withPoint(Point.fromLngLat(loc.longitude, loc.latitude))
+                            annotationManager.create(markerOptions)
                         }
                     }
                 }
