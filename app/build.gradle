@@ -19,9 +19,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks") // put your keystore file here
+            storePassword "your_password"
+            keyAlias "mykey"
+            keyPassword "your_password"
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled true
+            signingConfig signingConfigs.release
+            minifyEnabled false // safer for now; can enable later
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -30,7 +40,7 @@ android {
     }
 
     buildFeatures {
-        compose true // Keep for UI Compose, but MapLibre SDK does not need Compose
+        compose true // UI Compose, MapLibre classic MapView does not require Compose
     }
 
     composeOptions {
@@ -52,8 +62,6 @@ android {
         }
     }
 }
-
-
 
 dependencies {
     // Kotlin & Compose
@@ -78,7 +86,7 @@ dependencies {
     implementation 'com.squareup.moshi:moshi:1.15.0'
     implementation "androidx.compose.material:material-icons-extended:1.6.5"
 
-    // MapLibre SDK (classic MapView, not Compose)
+    // MapLibre classic SDK
     
 
     // Tests
@@ -107,7 +115,6 @@ tasks.register("downloadMdTiles") {
             println "MDTiles already cached, skipping download."
         }
 
-        // Copy cached file into app assets
         def assetsDir = file("src/main/assets/maps")
         assetsDir.mkdirs()
         copy {
